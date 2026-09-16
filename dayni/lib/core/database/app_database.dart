@@ -115,7 +115,14 @@ class AppDatabase extends _$AppDatabase {
 
   static QueryExecutor _openConnection() {
     return LazyDatabase(() async {
-      final dir = await getApplicationDocumentsDirectory();
+      Directory dir;
+      try {
+        dir = await getApplicationDocumentsDirectory();
+      } catch (_) {
+        final home = Platform.environment['HOME'] ?? '.';
+        dir = Directory(p.join(home, '.local', 'share', 'dayni'));
+        await dir.create(recursive: true);
+      }
       final file = File(p.join(dir.path, 'dayni.sqlite'));
       return NativeDatabase.createInBackground(file);
     });
