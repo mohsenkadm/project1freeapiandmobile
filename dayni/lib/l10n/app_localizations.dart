@@ -104,6 +104,12 @@ abstract class AppLocalizations {
   /// **'دَيني'**
   String get appName;
 
+  /// No description provided for @splashTagline.
+  ///
+  /// In ar, this message translates to:
+  /// **'إدارة ديون الزبائن'**
+  String get splashTagline;
+
   /// No description provided for @welcomeGreeting.
   ///
   /// In ar, this message translates to:

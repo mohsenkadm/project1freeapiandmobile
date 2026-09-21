@@ -16,6 +16,10 @@ abstract final class AppColors {
 
   static const Color backgroundLight = Color(0xFFF7F9FB);
   static const Color surfaceLight = Color(0xFFFFFFFF);
+  static const Color splash = Color(0xFF071A3C);
+  static const Color splashGlow = Color(0xFF1D4ED8);
+  static const Color splashGold = Color(0xFFF5B942);
+
   static const Color backgroundDark = Color(0xFF0F1419);
   static const Color surfaceDark = Color(0xFF1A222C);
 

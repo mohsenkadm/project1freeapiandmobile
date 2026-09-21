@@ -12,21 +12,22 @@ import '../../features/onboarding/presentation/onboarding_screen.dart';
 import '../../features/payments/presentation/add_payment_screen.dart';
 import '../../features/reports/presentation/reports_screen.dart';
 import '../../features/settings/presentation/settings_screen.dart';
+import '../../features/splash/presentation/splash_screen.dart';
 import '../di/providers.dart';
 import 'app_shell.dart';
 
 final _rootKey = GlobalKey<NavigatorState>();
 
 final routerProvider = Provider<GoRouter>((ref) {
-  final settingsAsync = ref.watch(settingsProvider);
-
   return GoRouter(
     navigatorKey: _rootKey,
-    initialLocation: '/',
+    initialLocation: '/splash',
     refreshListenable: _SettingsRefresh(ref),
     redirect: (context, state) {
-      final goingOnboarding = state.matchedLocation == '/onboarding';
-      final settings = settingsAsync.asData?.value;
+      final location = state.matchedLocation;
+      if (location == '/splash') return null;
+      final goingOnboarding = location == '/onboarding';
+      final settings = ref.read(settingsProvider).asData?.value;
       if (settings == null) return null;
       if (!settings.onboardingDone && !goingOnboarding) {
         return '/onboarding';
@@ -37,6 +38,10 @@ final routerProvider = Provider<GoRouter>((ref) {
       return null;
     },
     routes: [
+      GoRoute(
+        path: '/splash',
+        builder: (_, __) => const SplashScreen(),
+      ),
       GoRoute(
         path: '/onboarding',
         builder: (_, __) => const OnboardingScreen(),

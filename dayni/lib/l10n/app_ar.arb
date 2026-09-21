@@ -1,6 +1,7 @@
 {
   "@@locale": "ar",
   "appName": "دَيني",
+  "splashTagline": "إدارة ديون الزبائن",
   "welcomeGreeting": "أهلاً بك 👋",
   "totalDebts": "إجمالي الديون",
   "customers": "الزبائن",

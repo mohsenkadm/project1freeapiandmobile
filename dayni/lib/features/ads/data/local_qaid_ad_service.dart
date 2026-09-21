@@ -41,6 +41,9 @@ class LocalQaidAdService implements AdService {
 
   @override
   Uri? ctaUri(AdBanner banner) {
+    if (banner.id == AppConstants.qaidBannerId) {
+      return Uri.parse(AppConstants.qaidUrl);
+    }
     final url = banner.ctaUrl;
     if (url == null || url.isEmpty) return null;
     return Uri.tryParse(url);

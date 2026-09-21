@@ -12,6 +12,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get appName => 'دَيني';
 
   @override
+  String get splashTagline => 'إدارة ديون الزبائن';
+
+  @override
   String get welcomeGreeting => 'أهلاً بك 👋';
 
   @override

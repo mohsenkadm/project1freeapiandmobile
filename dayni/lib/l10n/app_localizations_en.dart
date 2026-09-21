@@ -9,7 +9,10 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
-  String get appName => 'Dayni';
+  String get appName => 'دَيني';
+
+  @override
+  String get splashTagline => 'إدارة ديون الزبائن';
 
   @override
   String get welcomeGreeting => 'Welcome 👋';
@@ -371,7 +374,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get termsContent =>
-      'Dayni is a free app for managing customer debts. Use at your own risk. We are not responsible for data loss before backup is enabled.';
+      'دَيني is a free app for managing customer debts. Use at your own risk. We are not responsible for data loss before backup is enabled.';
 
   @override
   String get comingSoon => 'Coming soon';

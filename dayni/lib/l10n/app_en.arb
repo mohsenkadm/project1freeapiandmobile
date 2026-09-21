@@ -1,6 +1,7 @@
 {
   "@@locale": "en",
-  "appName": "Dayni",
+  "appName": "دَيني",
+  "splashTagline": "إدارة ديون الزبائن",
   "welcomeGreeting": "Welcome 👋",
   "totalDebts": "Total debts",
   "customers": "Customers",
@@ -128,7 +129,7 @@
   "dismiss": "Dismiss",
   "noResults": "No results",
   "privacyContent": "Your data stays on your device. We do not send customer data to any server without your consent. We do not collect unnecessary personal data.",
-  "termsContent": "Dayni is a free app for managing customer debts. Use at your own risk. We are not responsible for data loss before backup is enabled.",
+  "termsContent": "دَيني is a free app for managing customer debts. Use at your own risk. We are not responsible for data loss before backup is enabled.",
   "comingSoon": "Coming soon",
   "descriptionHint": "e.g. Purchased goods",
   "selectDate": "Select date",
