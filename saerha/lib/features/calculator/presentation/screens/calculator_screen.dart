@@ -9,6 +9,7 @@ import '../../../../core/di/providers.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/utils/money_formatter.dart';
+import '../../../../core/widgets/animated_money.dart';
 import '../../../../core/widgets/app_card.dart';
 import '../../../../core/widgets/primary_button.dart';
 import '../../../settings/domain/entities/app_settings.dart';
@@ -92,6 +93,38 @@ class _CalculatorScreenState extends ConsumerState<CalculatorScreen> {
         );
   }
 
+  void _applyPrice(String raw) {
+    final normalized = raw
+        .replaceAll(',', '')
+        .replaceAll(' ', '')
+        .replaceAll('٬', '')
+        .replaceAllMapped(RegExp(r'[٠-٩]'), (m) {
+      const eastern = '٠١٢٣٤٥٦٧٨٩';
+      return '${eastern.indexOf(m[0]!)}';
+    });
+    final value = double.tryParse(normalized) ?? 0;
+    ref
+        .read(calculatorControllerProvider(widget.productId).notifier)
+        .setPurchasePrice(value);
+  }
+
+  void _togglePresetCost(String name, double amount) {
+    final notifier =
+        ref.read(calculatorControllerProvider(widget.productId).notifier);
+    final existing = ref
+        .read(calculatorControllerProvider(widget.productId))
+        .costItems
+        .where((e) => e.name == name)
+        .toList();
+    if (existing.isNotEmpty) {
+      for (final item in existing) {
+        notifier.removeCostItem(item.id);
+      }
+    } else {
+      notifier.addPresetCost(name, amount);
+    }
+  }
+
   Future<void> _addCustomCost() async {
     final nameController = TextEditingController();
     final amountController = TextEditingController();
@@ -135,7 +168,9 @@ class _CalculatorScreenState extends ConsumerState<CalculatorScreen> {
       );
       return;
     }
-    ref.read(calculatorControllerProvider(widget.productId).notifier).upsertCostItem(
+    ref
+        .read(calculatorControllerProvider(widget.productId).notifier)
+        .upsertCostItem(
           CostItem(
             id: const Uuid().v4(),
             name: nameController.text.trim(),
@@ -211,7 +246,8 @@ class _CalculatorScreenState extends ConsumerState<CalculatorScreen> {
               AppCard(
                 child: TextField(
                   controller: _priceController,
-                  keyboardType: TextInputType.number,
+                  keyboardType:
+                      const TextInputType.numberWithOptions(decimal: true),
                   style: Theme.of(context).textTheme.displaySmall?.copyWith(
                         fontWeight: FontWeight.w900,
                       ),
@@ -221,16 +257,64 @@ class _CalculatorScreenState extends ConsumerState<CalculatorScreen> {
                     suffixText: currency,
                     suffixStyle: Theme.of(context).textTheme.titleLarge,
                   ),
-                  onChanged: (raw) {
-                    final value =
-                        double.tryParse(raw.replaceAll(',', '')) ?? 0;
-                    ref
-                        .read(calculatorControllerProvider(widget.productId)
-                            .notifier)
-                        .setPurchasePrice(value);
-                  },
+                  onChanged: _applyPrice,
+                  onEditingComplete: () => _applyPrice(_priceController.text),
+                  onSubmitted: _applyPrice,
                 ),
               ).animate().fadeIn().slideY(begin: 0.04),
+              if (state.result != null) ...[
+                const SizedBox(height: AppSpacing.md),
+                AppCard(
+                  glow: true,
+                  gradient: AppColors.profitGradient,
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'سعر البيع المقترح',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium
+                                  ?.copyWith(color: AppColors.textSecondary),
+                            ),
+                            AnimatedMoney(
+                              value: state.result!.suggestedPrice,
+                              currencySuffix: currency,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .headlineMedium
+                                  ?.copyWith(fontWeight: FontWeight.w900),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Text(
+                            'الربح',
+                            style: Theme.of(context).textTheme.bodySmall,
+                          ),
+                          AnimatedMoney(
+                            value: state.result!.profit,
+                            currencySuffix: currency,
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleLarge
+                                ?.copyWith(
+                                  color: AppColors.profit,
+                                  fontWeight: FontWeight.w800,
+                                ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ],
               const SizedBox(height: AppSpacing.xl),
               Text(
                 'مصاريف إضافية',
@@ -242,12 +326,11 @@ class _CalculatorScreenState extends ConsumerState<CalculatorScreen> {
                 runSpacing: 8,
                 children: [
                   for (final preset in _presets)
-                    ActionChip(
+                    FilterChip(
                       label: Text(preset.$1),
-                      onPressed: () => ref
-                          .read(calculatorControllerProvider(widget.productId)
-                              .notifier)
-                          .addPresetCost(preset.$1, preset.$2),
+                      selected: state.costItems.any((e) => e.name == preset.$1),
+                      onSelected: (_) =>
+                          _togglePresetCost(preset.$1, preset.$2),
                     ),
                   ActionChip(
                     avatar: const Icon(Icons.add, size: 18),
