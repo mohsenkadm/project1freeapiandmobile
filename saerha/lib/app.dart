@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -35,9 +36,25 @@ class SaerhaApp extends ConsumerWidget {
         GlobalCupertinoLocalizations.delegate,
       ],
       builder: (context, child) {
-        return Directionality(
-          textDirection: TextDirection.rtl,
-          child: child ?? const SizedBox.shrink(),
+        final media = MediaQuery.of(context);
+        final safeInsets = media.viewInsets.copyWith(
+          left: media.viewInsets.left.clamp(0, double.infinity),
+          top: media.viewInsets.top.clamp(0, double.infinity),
+          right: media.viewInsets.right.clamp(0, double.infinity),
+          bottom: media.viewInsets.bottom.clamp(0, double.infinity),
+        );
+        return MediaQuery(
+          data: media.copyWith(
+            viewInsets: safeInsets,
+            textScaler: media.textScaler.clamp(
+              minScaleFactor: 0.85,
+              maxScaleFactor: kIsWeb ? 1.2 : 1.4,
+            ),
+          ),
+          child: Directionality(
+            textDirection: TextDirection.rtl,
+            child: child ?? const SizedBox.shrink(),
+          ),
         );
       },
       routerConfig: router,
