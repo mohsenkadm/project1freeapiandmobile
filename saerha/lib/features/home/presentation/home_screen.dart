@@ -114,7 +114,7 @@ class HomeScreen extends ConsumerWidget {
                     const SizedBox(height: AppSpacing.xl),
                     PrimaryButton(
                       label: 'ابدأ التسعير',
-                      icon: Icons.arrow_back_rounded,
+                      icon: Icons.calculate_rounded,
                       onPressed: () => context.go('/calculator'),
                     ),
                   ],
