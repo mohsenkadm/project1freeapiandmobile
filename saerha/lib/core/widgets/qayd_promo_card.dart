@@ -18,30 +18,49 @@ class QaydPromoCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AppCard(
+      glow: true,
       gradient: const LinearGradient(
         begin: Alignment.topRight,
         end: Alignment.bottomLeft,
-        colors: [Color(0xFF0F3D3A), Color(0xFF132A34)],
+        colors: [Color(0xFF0F3D3A), Color(0xFF0B2A63), Color(0xFF132A34)],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              Expanded(
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                decoration: BoxDecoration(
+                  color: AppColors.primary.withValues(alpha: 0.2),
+                  borderRadius: BorderRadius.circular(999),
+                  border: Border.all(
+                    color: AppColors.primary.withValues(alpha: 0.45),
+                  ),
+                ),
                 child: Text(
-                  'عرفت ربح المنتج… بس تعرف ربح محلك؟',
-                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        color: Colors.white,
+                  'قيد',
+                  style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                        color: AppColors.accent,
+                        fontWeight: FontWeight.w800,
                       ),
                 ),
               ),
+              const Spacer(),
               IconButton(
                 onPressed: onDismiss,
                 icon: const Icon(Icons.close, color: AppColors.textSecondary),
                 tooltip: 'إغلاق',
               ),
             ],
+          ),
+          const SizedBox(height: AppSpacing.sm),
+          Text(
+            'عرفت ربح المنتج… بس تعرف ربح محلك؟ 🚀',
+            style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w800,
+                ),
           ),
           const SizedBox(height: AppSpacing.sm),
           Text(

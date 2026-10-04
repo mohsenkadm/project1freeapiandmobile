@@ -20,8 +20,7 @@ class HomeScreen extends ConsumerWidget {
     final settings = ref.watch(settingsProvider).asData?.value;
     final products = ref.watch(productsProvider).asData?.value ?? const [];
     final currency = settings?.currencySuffix ?? AppConstants.currencySuffix;
-    final showQayd = products.length >= AppConstants.qaydPromoProductThreshold &&
-        !(settings?.qaydPromoDismissed ?? false);
+    final showQayd = !(settings?.qaydPromoDismissed ?? false);
 
     return Scaffold(
       appBar: AppBar(
@@ -58,6 +57,16 @@ class HomeScreen extends ConsumerWidget {
                   color: AppColors.textSecondary,
                 ),
           ).animate().fadeIn(delay: 60.ms),
+          if (showQayd) ...[
+            const SizedBox(height: AppSpacing.xl),
+            QaydPromoCard(
+              onDismiss: () async {
+                final repo = ref.read(settingsRepositoryProvider);
+                final current = await repo.get();
+                await repo.save(current.copyWith(qaydPromoDismissed: true));
+              },
+            ),
+          ],
           const SizedBox(height: AppSpacing.xxl),
           Hero(
             tag: 'pricing-hero',
@@ -160,14 +169,6 @@ class HomeScreen extends ConsumerWidget {
             }),
             const SizedBox(height: AppSpacing.lg),
           ],
-          if (showQayd)
-            QaydPromoCard(
-              onDismiss: () async {
-                final repo = ref.read(settingsRepositoryProvider);
-                final current = await repo.get();
-                await repo.save(current.copyWith(qaydPromoDismissed: true));
-              },
-            ),
         ],
       ),
     );

@@ -20,17 +20,36 @@ class ReportsScreen extends ConsumerWidget {
     final insights = ref.watch(productInsightsProvider);
     final settings = ref.watch(settingsProvider).asData?.value;
     final currency = settings?.currencySuffix ?? AppConstants.currencySuffix;
-    final showQayd = insights.count >= 1 &&
-        !(settings?.qaydPromoDismissed ?? false);
+    final showQayd = !(settings?.qaydPromoDismissed ?? false);
 
     if (insights.count == 0) {
       return Scaffold(
         appBar: AppBar(title: const Text('نظرة على منتجاتك')),
-        body: EmptyState(
-          title: 'لسه ماكو رؤى للعرض 👋',
-          subtitle: 'احفظ بعض المنتجات حتى نشوف متوسط أرباحك.',
-          actionLabel: 'ابدأ التسعير',
-          onAction: () => context.go('/calculator'),
+        body: ListView(
+          padding: const EdgeInsets.fromLTRB(
+            AppSpacing.xl,
+            AppSpacing.sm,
+            AppSpacing.xl,
+            100,
+          ),
+          children: [
+            EmptyState(
+              title: 'لسه ماكو رؤى للعرض 👋',
+              subtitle: 'احفظ بعض المنتجات حتى نشوف متوسط أرباحك.',
+              actionLabel: 'ابدأ التسعير',
+              onAction: () => context.go('/calculator'),
+            ),
+            if (showQayd) ...[
+              const SizedBox(height: AppSpacing.xl),
+              QaydPromoCard(
+                onDismiss: () async {
+                  final repo = ref.read(settingsRepositoryProvider);
+                  final current = await repo.get();
+                  await repo.save(current.copyWith(qaydPromoDismissed: true));
+                },
+              ),
+            ],
+          ],
         ),
       );
     }

@@ -20,7 +20,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    Future<void>.delayed(const Duration(milliseconds: 650), () {
+    Future<void>.delayed(const Duration(milliseconds: 700), () {
       if (mounted) setState(() => _showTagline = true);
     });
     Future<void>.delayed(AppConstants.splashDuration, _goNext);
@@ -51,32 +51,42 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Container(
-                width: 112,
-                height: 112,
+                width: 168,
+                height: 168,
                 decoration: BoxDecoration(
-                  gradient: AppColors.primaryGradient,
-                  borderRadius: BorderRadius.circular(30),
+                  borderRadius: BorderRadius.circular(40),
                   boxShadow: [
                     BoxShadow(
-                      color: AppColors.primary.withValues(alpha: 0.4),
-                      blurRadius: 32,
-                      offset: const Offset(0, 14),
+                      color: AppColors.primary.withValues(alpha: 0.35),
+                      blurRadius: 36,
+                      offset: const Offset(0, 16),
+                    ),
+                    BoxShadow(
+                      color: const Color(0xFFFFB020).withValues(alpha: 0.18),
+                      blurRadius: 24,
                     ),
                   ],
                 ),
-                child: const Icon(
-                  Icons.sell_rounded,
-                  size: 56,
-                  color: AppColors.background,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(40),
+                  child: Image.asset(
+                    AppConstants.splashLogoAsset,
+                    fit: BoxFit.cover,
+                  ),
                 ),
               )
                   .animate()
                   .fadeIn(duration: 450.ms)
                   .scale(
-                    begin: const Offset(0.7, 0.7),
+                    begin: const Offset(0.72, 0.72),
                     end: const Offset(1, 1),
                     curve: Curves.easeOutBack,
-                    duration: 700.ms,
+                    duration: 800.ms,
+                  )
+                  .then(delay: 120.ms)
+                  .shimmer(
+                    duration: 1100.ms,
+                    color: Colors.white.withValues(alpha: 0.22),
                   ),
               const SizedBox(height: 28),
               Text(
