@@ -232,5 +232,7 @@ class CalculatorController extends StateNotifier<CalculatorState> {
 
 final calculatorControllerProvider = StateNotifierProvider.autoDispose
     .family<CalculatorController, CalculatorState, String?>((ref, productId) {
-  return CalculatorController(ref, productId: productId);
+  final controller = CalculatorController(ref, productId: productId);
+  ref.keepAlive();
+  return controller;
 });

@@ -21,13 +21,7 @@ class AppShell extends StatelessWidget {
         onPressed: () => _onFab(context),
         tooltip: 'تسعير جديد',
         child: const Icon(Icons.add_rounded),
-      )
-          .animate(onPlay: (c) => c.repeat(reverse: true))
-          .scale(
-            begin: const Offset(1, 1),
-            end: const Offset(1.04, 1.04),
-            duration: 1800.ms,
-          ),
+      ).animate().fadeIn(duration: 280.ms).scale(begin: const Offset(0.9, 0.9)),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: NavigationBar(
         selectedIndex: navigationShell.currentIndex,
